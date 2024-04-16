@@ -6,7 +6,7 @@ import pandas as pd
 from PIL import Image
 
 
-DATA_ROOT = "renders"
+DATA_ROOT = "data"
 
 DATA_FOLDERS = ["epidural",
                 "intraparenchymal",
