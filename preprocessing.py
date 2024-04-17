@@ -22,7 +22,8 @@ DATA_SUBFOLDERS = ["brain_bone_window",
                     "subdural_window"]
 
 
-SEGMENTATION_FILES = ["Results_Epidural Hemorrhage Detection_2020-11-16_21.31.26.148.csv",
+SEGMENTATION_FILES = ["Results_Brain Hemorrhage Tracing_2020-09-28_15.21.52.597",
+                      "Results_Epidural Hemorrhage Detection_2020-11-16_21.31.26.148.csv",
                       "Results_Intraparenchymal Hemorrhage Detection_2020-11-16_21.39.31.268.csv",
                       "Results_Multiple Hemorrhage Detection_2020-11-16_21.36.24.018.csv",
                       "Results_Subarachnoid Hemorrhage Detection_2020-11-16_21.36.18.668.csv",
