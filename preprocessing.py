@@ -4,6 +4,8 @@ import os
 import random
 import pandas as pd
 from PIL import Image
+import ast
+import json
 
 
 DATA_ROOT = "renders"
@@ -22,21 +24,21 @@ DATA_SUBFOLDERS = ["brain_bone_window",
                     "subdural_window"]
 
 
-SEGMENTATION_FILES = ["Results_Brain Hemorrhage Tracing_2020-09-28_15.21.52.597.csv",
+SEGMENTATION_FILES = list(sorted([
                       "Results_Epidural Hemorrhage Detection_2020-11-16_21.31.26.148.csv",
                       "Results_Intraparenchymal Hemorrhage Detection_2020-11-16_21.39.31.268.csv",
                       "Results_Multiple Hemorrhage Detection_2020-11-16_21.36.24.018.csv",
                       "Results_Subarachnoid Hemorrhage Detection_2020-11-16_21.36.18.668.csv",
                       "Results_Subdural Hemorrhage Detection_2020-11-16_21.35.48.040.csv",
                       "Results_Subdural Hemorrhage Detection_2020-11-16_21.37.19.745.csv"
-                      ]
+                      ]))
 
-SEGMENTATION_NAMES = ["epidural",
+SEGMENTATION_NAMES = list(sorted(["epidural",
                       "intraparenchymal",
                       "multiple",
                       "subarachnoid",
                       "subdural-1",
-                      "subdural-2"]
+                      "subdural-2"]))
 
 
 def load_labels(path_to_folder="../../Hemorrhage Segmentation Project"):
@@ -81,17 +83,30 @@ def merge_dicts(dict1, dict2, parent):
 
 #     return df.T.to_dict("dict")
 
+
+
 def load_segmentation(path_to_folder):
     path = path_to_folder + "/" if path_to_folder[-1] != "/" else path_to_folder
 
     dfs = {}
+    def json_loader(s):
+        if isinstance(s, str):
+            return json.loads(s)
+        else:
+            return s
 
     for filename, parent  in zip(SEGMENTATION_FILES, SEGMENTATION_NAMES): 
             df = pd.read_csv(path + filename)
             df["Origin"] = df["Origin"].str.replace(".jpg", "", regex=False)
             df.set_index("Origin", inplace=True)
+            
+            df["Correct Label"] = df["Correct Label"].str.replace("\'", "\"", regex=False)
+            df['Correct Label'] = df['Correct Label'].apply(json_loader)
+            df["Majority Label"] = df["Majority Label"].str.replace("\'", "\"", regex=False)
+            df['Majority Label'] = df['Majority Label'].apply(json_loader)
 
-            dfs[parent] = df
+
+            dfs[parent] = df.copy()
 
             print(f"loaded {parent} segmentation data")
 
@@ -155,3 +170,5 @@ def batch_generator(folder_path, batch_size=9, seed=0):
     # to clear out the remainder if our batch size doesn't match total size perfectly!
     if batch:
         yield np.array(batch), ids
+        
+
