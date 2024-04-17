@@ -10,7 +10,7 @@ DATA_ROOT = "data"
 
 DATA_FOLDERS = ["epidural",
                 "intraparenchymal",
-                "itroventricular",
+                "intraventricular",
                 "multi",
                 "normal",
                 "subarachnoid",
